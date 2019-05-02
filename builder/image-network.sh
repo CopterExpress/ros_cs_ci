@@ -3,7 +3,7 @@
 #
 # Script for network configure
 #
-# Copyright (C) 2018 Copter Express Technologies
+# Copyright (C) 2019 Copter Express Technologies
 #
 # Author: Artem Smirnov <urpylka@gmail.com>
 #
