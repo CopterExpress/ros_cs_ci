@@ -1,0 +1,72 @@
+sudo: required
+if: tag IS present
+language: generic
+services:
+- docker
+env:
+  global:
+  - DOCKER="sfalexrog/img-tool:qemu-update"
+  - TARGET_REPO="https://github.com/${TRAVIS_REPO_SLUG}.git"
+  - if [[ -z ${TRAVIS_TAG} ]]; then IMAGE_VERSION="${TRAVIS_COMMIT}}"; else IMAGE_VERSION="${TRAVIS_TAG}"; fi
+  - IMAGE_NAME="ros_cs_${IMAGE_VERSION}.img"
+git:
+  depth: 50
+jobs:
+  fast_finish: true
+  include:
+  - stage: Build
+    name: Raspberry Pi Image Build
+    cache:
+      directories:
+      - imgcache
+    before_script:
+    - mkdir -p lib
+    - pushd lib
+    - git clone https://github.com/mavlink/mavlink.git
+    - git clone https://github.com/CopterExpress/pymavlink.git
+    - git clone https://github.com/CopterExpress/cmavnode.git
+    - pushd cmavnode
+    - git submodule update --init --recursive
+    - popd
+    - mkdir -p ros_cs_ws/src
+    - pushd ros_cs_ws/src
+    - git clone https://${GITHUB_USER}:${GITHUB_OAUTH_TOKEN}@github.com/CopterExpress/ros_cs.git
+    - pushd ros_cs
+    - git submodule update --init --recursive
+    - popd
+    - popd
+    - popd
+    - docker pull ${DOCKER}
+    - if [ -n "$(ls -A imgcache/*.zip)" ]; then mkdir -p images && cp imgcache/*.zip
+      images; fi
+    script:
+    - docker run --privileged --rm -v /dev:/dev -v $(pwd):/builder/repo -e TRAVIS_TAG="${TRAVIS_TAG}"
+      ${DOCKER}
+    before_cache:
+    - cp images/*.zip imgcache
+    before_deploy:
+    - git config --local user.name "${GITHUB_USER}"
+    - git config --local user.email "${GITHUB_USER_EMAIL}"
+    - sudo chmod -R 777 *
+    - cd images && zip ${IMAGE_NAME}.zip ${IMAGE_NAME}
+    deploy:
+      provider: releases
+      api_key: "${GITHUB_OAUTH_TOKEN}"
+      file: "${IMAGE_NAME}.zip"
+      skip_cleanup: true
+      on:
+        tags: true
+      draft: true
+      name: "${TRAVIS_TAG}"
+      repo: "${RELEASES_REPO}"
+  - stage: Annotate
+    name: Auto-generate changelog
+    language: python
+    python: 3.6
+    install:
+      - pip install GitPython PyGithub
+    script:
+      - PYTHONUNBUFFERED=1 python ./gen_changelog.py
+stages:
+- Build
+- Annotate

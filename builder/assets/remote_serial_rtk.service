@@ -1,0 +1,16 @@
+[Unit]
+Description=Serial over IP for a remote GPS/RTK
+Wants=network-online.target
+After=network-online.target
+StartLimitBurst=0
+
+[Service]
+EnvironmentFile=/lib/systemd/system/remote_serial_rtk.env
+Type=simple
+TimeoutStartSec=3
+ExecStart=/usr/bin/socat -d -d pty,link=/dev/ttyV0,b${REMOTE_RTK_BAUDRATE},raw,echo=0 tcp:${REMOTE_RTK_IP}:${REMOTE_RTK_PORT}       
+Restart=on-failure
+RestartSec=2s
+
+[Install]
+WantedBy=multi-user.target

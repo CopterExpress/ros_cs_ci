@@ -1,0 +1,13 @@
+[Unit]
+Description=cmavnode for %I
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple 
+ExecStart=/usr/local/bin/cmavnode -f /etc/cmavnode/%i.conf      
+Restart=on-failure
+RestartSec=2s
+
+[Install]
+WantedBy=multi-user.target

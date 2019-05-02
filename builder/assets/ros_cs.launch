@@ -1,0 +1,104 @@
+<!-- Start COEX charging station -->
+<launch>
+  <!-- Charging station ROS node (output on the screen) -->
+  <node pkg="cs_mavlink" type="cs_mavlink_node.py" name="cs_mavlink" output="screen" respawn="true" respawn_delay="3">
+    <!-- Charging station topics prefix -->
+    <param name="prefix" type="str" value="cs_mavlink" />
+    <!-- Node state check timeout (for the correct node shutdown) -->
+    <param name="node_state_check_timeout" type="double" value="0.5" />
+    <!-- Mavlink URL in the original MAVLink format -->
+    <param name="mavlink_url" type="str" value="udpout:localhost:14588" />
+    <!-- Charging station heartbeat interval (s) -->
+    <param name="heartbeat_interval" type="double" value="1" />
+    <!-- GPS driver ROS node prefix (keep empty string if no driver node presented) -->
+    <param name="gps_node_prefix" type="str" value="cs_gps_ubx_rtcm" />
+    <!-- RTCM driver ROS node prefix (keep empty string if no topic presented) -->
+    <param name="rtcm_node_prefix" type="str" value="cs_gps_ubx_rtcm" />
+    <!-- Compass heading topic (keep empty string if no compass data presented) -->
+    <param name="compass_heading_topic" type="str" value="" />
+    <!-- Charging station driver ROS node -->
+    <param name="driver_node" type="str" value="cs_driver_a1" />
+    <!-- Vehicle battery state ROS node -->
+    <param name="battery_state_topic" type="str" value="/cs_charger_gpio/battery_state" />
+    <!-- Wind sensor ROS topic -->
+    <param name="wind_topic" type="str" value="/cs_meteo_pywws/wind" />
+    <!-- Wind direction sensor ROS topic -->
+    <param name="wind_direction_topic" type="str" value="/cs_meteo_pywws/wind_direction" />
+    <!-- External temperature ROS topic -->
+    <param name="external_temperature_topic" type="str" value="/cs_meteo_pywws/temp_out" />
+    <!-- Barometer ROS topic -->
+    <param name="barometer_topic" type="str" value="/cs_meteo_pywws/barometer" />
+    <!-- Rain ROS topic -->
+    <param name="rain_topic" type="str" value="/cs_meteo_pywws/rain" />
+    <!-- External humidity ROS topic -->
+    <param name="external_humidity_topic" type="str" value="/cs_meteo_pywws/humidity_out" />
+    <!-- Parameters that can be changed during the runtime are located into: -->
+    <!--    /config/<node_name>.json file -->
+  </node>
+  <!-- Charging station driver ROS node (output on the screen) -->
+  <node pkg="cs_driver_a1" type="cs_driver_a1_node.py" name="cs_driver_a1" output="screen" respawn="true" respawn_delay="3">
+    <!-- Charging station driver topics prefix -->
+    <param name="prefix" type="str" value="cs_driver_a1" />
+    <!-- ROS node shutdown check interval -->
+    <param name="read_timeout" type="double" value="1" />
+    <!-- Arduino serial port -->
+    <param name="serial_port" type="str" value="" />
+    <!-- Serial port baudrate -->
+    <param name="serial_baudrate" type="int" value="57600" />
+    <!-- Serial port parity (none, even, odd, mark, space) ('N', 'E', 'O', 'M', 'S') -->
+    <param name="serial_parity" type="str" value="N" />
+    <!-- Serial port stop bits -->
+    <param name="serial_stopbits" type="int" value="1" />
+    <!-- Serial port byte size -->
+    <param name="serial_bytesize" type="int" value="8" />
+    <!-- Serial port XON/XOFF -->
+    <param name="serial_xonxoff" type="bool" value="false" />
+    <!-- Serial port RTS/CTS -->
+    <param name="serial_rtscts" type="bool" value="false" />
+  </node>
+  <!-- UBX/RTCM driver node -->
+  <node pkg="cs_gps_ubx_rtcm" type="cs_gps_ubx_rtcm_node" name="cs_gps_ubx_rtcm" output="screen" respawn="true" respawn_delay="3">
+    <!-- UBX module serial port -->
+    <param name="serial_port" type="str" value="/dev/ttyV0" />
+    <!-- UBX module serial port byte size (5, 6, 7, 8) -->
+    <param name="serial_port_byte_size" type="int" value="8" />
+    <!-- UBX module serial port parity (none, odd, even) (n, o, e) -->
+    <param name="serial_port_parity" type="str" value="n" />
+    <!-- UBX module serial port stop bits (1, 1.5, 2) -->
+    <param name="serial_port_stop_bits" type="str" value="1" />
+    <!-- UBX module serial port flow control (none, software, hardware) (n, s, h) -->
+    <param name="serial_port_flow_control" type="str" value="n" />
+    <!-- Restart survey-in on the node start -->
+    <param name="survey_in" type="bool" value="false" />
+    <!-- Volatile node parameters -->
+    <param name="configuration_file" value="$(find cs_gps_ubx_rtcm)/config/cs_gps_ubx_rtcm.json" />
+  </node>
+  <!-- Charger GPIO-based node -->
+  <node pkg="cs_charger_gpio" type="cs_charger_gpio_node" name="cs_charger_gpio" output="screen" respawn="true" respawn_delay="3">
+    <!-- Debug output -->
+    <param name="debug" type="bool" value="false" />
+    <!-- pigpiod server IP -->
+    <param name="pigpiod_ip" type="str" value="localhost" />
+    <!-- pigpiod server port -->
+    <param name="pigpiod_port" type="int" value="8888" />
+    <!-- Charger GPIO pin number (Broadcom) -->
+    <param name="pin" type="int" value="17" />
+    <!-- Enable pull-up / pull-down on the charger pin (none, up, down) -->
+    <param name="pull_up_down" type="str" value="none" />
+    <!-- Pin state debounce time (works on the server side) (us), 0 to disable -->
+    <param name="debounce_time" type="int" value="100000" />
+    <!-- Charged state debounce time (works on the node side) (s), 5 s min or 0 to disable -->
+    <param name="charged_state_debounce_time" type="double" value="5" />
+    <!-- Inversed signal on the charger GPIO pin -->
+    <param name="inversed_signal" type="bool" value="true" />
+  </node>
+  <!-- pywws driver node -->
+  <node pkg="cs_meteo_pywws" type="cs_meteo_pywws_node.py" name="cs_meteo_pywws" output="screen" respawn="true" respawn_delay="3">
+    <!-- Node topics prefix -->
+    <param name="prefix" type="str" value="cs_meteo_pywws" />
+    <!-- Data refresh time (s) (48 s is an actual weather station refresh rate) -->
+    <param name="refresh_time" type="int" value="48" />
+    <!-- Rain measurement interval (s) (3600 s by default) -->
+    <param name="rain_interval" type="int" value="3600" />
+  </node>
+</launch>
