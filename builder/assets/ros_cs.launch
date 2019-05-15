@@ -101,4 +101,21 @@
     <!-- Rain measurement interval (s) (3600 s by default) -->
     <param name="rain_interval" type="int" value="3600" />
   </node>
+  <!-- GPIO actuator node -->
+  <node pkg="cs_gpio_actuator" type="cs_gpio_actuator_node" name="cs_gpio_actuator" output="screen" required="true">
+    <!-- Debug output -->
+    <param name="debug" type="bool" value="false" />
+    <!-- pigpiod server IP -->
+    <param name="pigpiod_ip" type="str" value="localhost" />
+    <!-- pigpiod server port -->
+    <param name="pigpiod_port" type="int" value="8888" />
+    <!-- GPIO pin number (Broadcom) -->
+    <param name="pin" type="int" value="27" />
+    <!-- Inversed signal on the charger GPIO pin -->
+    <param name="inversed_signal" type="bool" value="true" />
+    <!-- Charging station driver prefix -->
+    <param name="driver_node_prefix" type="str" value="cs_driver_a1" />
+    <!-- Actuator active states (comma separated, as example: "OPEN,CLOSED") -->
+    <param name="active_states" type="str" value="OPEN" />
+  </node>
 </launch>
