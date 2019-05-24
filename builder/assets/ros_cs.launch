@@ -87,8 +87,8 @@
     <param name="pull_up_down" type="str" value="none" />
     <!-- Pin state debounce time (works on the server side) (us), 0 to disable -->
     <param name="debounce_time" type="int" value="100000" />
-    <!-- Charged state debounce time (works on the node side) (s), 5 s min or 0 to disable -->
-    <param name="charged_state_debounce_time" type="double" value="5" />
+    <!-- Charged state debounce time (works on the node side) (s), 10 s min or 0 to disable -->
+    <param name="charged_state_debounce_time" type="double" value="10" />
     <!-- Inversed signal on the charger GPIO pin -->
     <param name="inversed_signal" type="bool" value="true" />
   </node>
