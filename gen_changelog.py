@@ -9,6 +9,43 @@ import sys
 
 upload_changelog = True
 
+# Tracked repositories and their paths
+# First entry in each pair is how the repository will appear in the changelog
+# Second is the path relative to the script (or an absolute path, if that works)
+TRACKED_REPOSITORIES = [
+    ('Base repository', '.'),
+    ('ROS Charging Station modules (ros_cs)', './ros_cs'),
+    ('pymavlink with COEX patches', './pymavlink'),
+    ('cmavnode with COEX patches', './cmavnode'),
+    ('MAVLink library', './mavlink')
+]
+
+
+# Get changelog and start/end points
+def get_repo_changelog(repo_path: str):
+    print('Opening repository at {}'.format(repo_path))
+    repo = Repo(repo_path)
+    git = repo.git()
+    try:
+        print('Unshallowing repository at {}'.format(repo_path))
+        git.fetch('--unshallow', '--tags')
+    except exc.GitCommandError:
+        print('Repository already unshallowed')
+    print('Attempting to get previous tag')
+    log_args = []
+    try:
+        base_tag = git.describe('--tags', '--abbrev=0', '{}^'.format('HEAD'))
+        print('Base tag set to {}'.format(base_tag))
+        history_brackets = (base_tag, 'HEAD')
+        log_args += ['{}...{}'.format(base_tag, current_tag)]
+    except exc.GitCommandError:
+        print('No tags found, ')
+        history_brackets = ('initial commit', 'HEAD')
+    log_args += ['--pretty=format:* %H %s *(%an)*']
+    changelog = git.log(*log_args)
+    return history_brackets, changelog
+
+
 try:
     current_tag = os.environ['TRAVIS_TAG']
     if current_tag == '':
@@ -34,25 +71,15 @@ except KeyError:
     target_repo = ''
     exit(1)
 
-if len(sys.argv) > 1:
-    repo_path = sys.argv[1]
-else:
-    repo_path = '.'
+complete_changelog = ''
+for (repo_name, repo_path) in TRACKED_REPOSITORIES:
+    brackets, changelog = get_repo_changelog(repo_path)
+    print('Changelog for {}:\n{}'.format(repo_name, changelog))
+    complete_changelog += '## {}\n\nChanges between {} and {}:\n\n{}\n\n'.format(repo_name,
+                                                                                 brackets[0],
+                                                                                 brackets[1],
+                                                                                 changelog)
 
-print('Opening repository at {}'.format(repo_path))
-repo = Repo(repo_path)
-git = repo.git()
-try:
-    print('Unshallowing repository')
-    git.fetch('--unshallow', '--tags')
-except exc.GitCommandError:
-    print('Repository already unshallowed')
-print('Attempting to get previous tag')
-base_tag = git.describe('--tags', '--abbrev=0', '{}^'.format(current_tag))
-print('Base tag set to {}'.format(base_tag))
-
-changelog = git.log('{}...{}'.format(base_tag, current_tag), '--pretty=format:* %H %s *(%an)*')
-print('Current changelog: \n{}'.format(changelog))
 
 # Only interact with Github if uploading is enabled
 if upload_changelog:
@@ -69,7 +96,7 @@ if upload_changelog:
     gh_body = gh_release.body
     if gh_body is None:
         gh_body = ''
-    gh_body = '{}\nChanges between `{}` and `{}`:\n\n{}'.format(gh_body, base_tag, current_tag, changelog)
+    gh_body = '{}\n{}'.format(gh_body, complete_changelog)
     print('New release body: {}'.format(gh_body))
     gh_release.update_release(gh_release.tag_name, gh_body, draft=True, prerelease=True,
                               tag_name=gh_release.tag_name, target_commitish=gh_release.target_commitish)
