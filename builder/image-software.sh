@@ -104,6 +104,7 @@ libboost-thread-dev \
 libreadline-dev \
 socat \
 dnsmasq \
+openvpn \
 && echo_stamp "Everything was installed!" "SUCCESS" \
 || (echo_stamp "Some packages wasn't installed!" "ERROR"; exit 1)
 
