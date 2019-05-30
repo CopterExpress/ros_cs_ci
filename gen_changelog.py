@@ -37,7 +37,7 @@ def get_repo_changelog(repo_path: str):
         base_tag = git.describe('--tags', '--abbrev=0', '{}^'.format('HEAD'))
         print('Base tag set to {}'.format(base_tag))
         history_brackets = (base_tag, 'HEAD')
-        log_args += ['{}...{}'.format(base_tag, current_tag)]
+        log_args += ['{}...{}'.format(history_brackets[0], history_brackets[1])]
     except exc.GitCommandError:
         print('No tags found, ')
         history_brackets = ('initial commit', 'HEAD')
@@ -47,14 +47,14 @@ def get_repo_changelog(repo_path: str):
 
 
 try:
-    current_tag = os.environ['TRAVIS_TAG']
-    if current_tag == '':
-        current_tag = 'HEAD'
+    travis_tag = os.environ['TRAVIS_TAG']
+    if travis_tag == '':
+        travis_tag = 'HEAD'
         upload_changelog = False
-    print('TRAVIS_TAG is set to {}'.format(current_tag))
+    print('TRAVIS_TAG is set to {}'.format(travis_tag))
 except KeyError:
     print('TRAVIS_TAG not set - not uploading changelog')
-    current_tag = 'HEAD'
+    travis_tag = 'HEAD'
     upload_changelog = False
 
 try:
@@ -69,7 +69,7 @@ try:
 except KeyError:
     print('RELEASES_REPO not set - cannot determine remote repository')
     target_repo = ''
-    exit(1)
+    #exit(1)
 
 complete_changelog = ''
 for (repo_name, repo_path) in TRACKED_REPOSITORIES:
@@ -80,6 +80,7 @@ for (repo_name, repo_path) in TRACKED_REPOSITORIES:
                                                                                  brackets[1],
                                                                                  changelog)
 
+repo = Repo()
 
 # Only interact with Github if uploading is enabled
 if upload_changelog:
