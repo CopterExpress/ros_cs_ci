@@ -23,8 +23,8 @@ jobs:
     - pushd lib
     - git clone https://github.com/mavlink/mavlink.git
     - git clone https://github.com/CopterExpress/pymavlink.git
-    - git clone https://github.com/CopterExpress/cmavnode.git
-    - pushd cmavnode
+    - git clone https://github.com/CopterExpress/mavlink-router.git
+    - pushd mavlink-router
     - git submodule update --init --recursive
     - popd
     - mkdir -p ros_cs_ws/src

@@ -105,6 +105,10 @@ libreadline-dev \
 socat \
 dnsmasq \
 openvpn \
+autoconf \
+automake \
+libtool \
+python3-future \
 && echo_stamp "Everything was installed!" "SUCCESS" \
 || (echo_stamp "Some packages wasn't installed!" "ERROR"; exit 1)
 
@@ -136,12 +140,14 @@ git status && \
 MDEF=/home/pi/mavlink/message_definitions pip2 install . -v \
 || (echo_stamp "Failed to build pymavlink!" "ERROR"; exit 1)
 
-echo_stamp "Build cmavnode"
-cd /home/pi/cmavnode \
+echo_stamp "Build mavlink-router"
+cd /home/pi/mavlink-router \
 && git status \
 && mkdir build \
-&& cd build \
-&& cmake .. \
+&& ./autogen.sh \
+&& ./configure CFLAGS='-g -O2' \
+  --sysconfdir=/etc --localstatedir=/var --libdir=/usr/lib64 \
+  --prefix=/usr \
 && make \
 && make install \
 || (echo_stamp "Failed to build cmavnode!" "ERROR"; exit 1)
@@ -163,7 +169,7 @@ gpgconf --kill dirmngr
 pkill -9 -f dirmngr || true
 
 echo_stamp "Enable services"
-systemctl enable cmavnode@cs \
+systemctl enable mavlink-router \
 && systemctl enable pigpiod \
 || (echo_stamp "Failed to enable services!" "ERROR"; exit 1)
 
