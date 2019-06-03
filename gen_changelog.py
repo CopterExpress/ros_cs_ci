@@ -89,11 +89,11 @@ if upload_changelog:
     # Get all releases and find ours by its tag name
     gh_release = None
     for release in gh_repo.get_releases():
-        if release.tag_name == current_tag:
+        if release.tag_name == travis_tag:
             gh_release = release
     if gh_release is None:
         # We could not find the correct release, so here's our last resort. It will most likely fail.
-        gh_release = gh_repo.get_release(current_tag)
+        gh_release = gh_repo.get_release(travis_tag)
     gh_body = gh_release.body
     if gh_body is None:
         gh_body = ''
