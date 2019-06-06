@@ -564,3 +564,8 @@ pyserial:
 serial:
   debian:
     stretch: [ros-kinetic-serial]
+python-libusb1:
+  debian:
+    stretch:
+      pip:
+        packages: [libusb1]
