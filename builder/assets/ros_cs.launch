@@ -18,6 +18,8 @@
     <param name="compass_heading_topic" type="str" value="" />
     <!-- Charging station driver ROS node -->
     <param name="driver_node" type="str" value="cs_driver_a1" />
+    <!-- ROS service maximum waiting timeout -->
+    <param name="service_waiting_timeout" type="int" value="10" />
     <!-- Vehicle battery state ROS node -->
     <param name="battery_state_topic" type="str" value="/cs_charger_gpio/battery_state" />
     <!-- Wind sensor ROS topic -->
