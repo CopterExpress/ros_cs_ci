@@ -27,6 +27,10 @@ jobs:
     - pushd mavlink-router
     - git submodule update --init --recursive
     - popd
+    - git clone https://github.com/CopterExpress/cmavnode.git
+    - pushd cmavnode
+    - git submodule update --init --recursive
+    - popd
     - mkdir -p ros_cs_ws/src
     - pushd ros_cs_ws/src
     - git clone https://${GITHUB_USER}:${GITHUB_OAUTH_TOKEN}@github.com/CopterExpress/ros_cs.git

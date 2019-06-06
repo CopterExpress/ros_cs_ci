@@ -150,6 +150,16 @@ cd /home/pi/mavlink-router \
   --prefix=/usr \
 && make \
 && make install \
+|| (echo_stamp "Failed to build mavlink-router!" "ERROR"; exit 1)
+
+echo_stamp "Build cmavnode"
+cd /home/pi/cmavnode \
+&& git status \
+&& mkdir build \
+&& cd build \
+&& cmake .. \
+&& make \
+&& make install \
 || (echo_stamp "Failed to build cmavnode!" "ERROR"; exit 1)
 
 echo_stamp "Add .vimrc"
@@ -169,7 +179,7 @@ gpgconf --kill dirmngr
 pkill -9 -f dirmngr || true
 
 echo_stamp "Enable services"
-systemctl enable mavlink-router \
+systemctl enable cmavnode@cs \
 && systemctl enable pigpiod \
 || (echo_stamp "Failed to enable services!" "ERROR"; exit 1)
 
