@@ -178,6 +178,13 @@ gpgconf --kill dirmngr
 # We ignore pkill's exit value as well.
 pkill -9 -f dirmngr || true
 
+echo_stamp "Change permissions"
+chown -Rf pi:pi /home/pi/mavlink \
+&& chown -Rf pi:pi /home/pi/pymavlink \
+&& chown -Rf pi:pi /home/pi/mavlink-router \
+&& chown -Rf pi:pi /home/pi/cmavnode \
+|| (echo_stamp "Failed to change permissions!" "ERROR"; exit 1)
+
 echo_stamp "Enable services"
 systemctl enable cmavnode@cs \
 && systemctl enable pigpiod \
