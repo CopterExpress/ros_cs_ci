@@ -157,7 +157,7 @@ apt-get install -y --no-install-recommends \
 
 echo_stamp "Change permissions"
 chown -Rf pi:pi /home/pi/ros_cs_ws \
-&& chown -f pi:pi /home/pi/ros_cs.launch
+&& chown -f pi:pi /home/pi/ros_cs.launch \
 || (echo_stamp "Failed to change permissions!" "ERROR"; exit 1)
 
 echo_stamp "Setup ROS environment"
