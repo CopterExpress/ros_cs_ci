@@ -59,7 +59,7 @@ echo_stamp "Install apt keys & repos"
 curl http://repo.coex.space/aptly_repo_signing.key 2> /dev/null | apt-key add -
 apt-get update \
 && apt-get install --no-install-recommends -y -qq dirmngr=2.1.18-8~deb9u4 > /dev/null \
-&& apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
+&& apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
 
 echo "deb http://packages.ros.org/ros/ubuntu stretch main" > /etc/apt/sources.list.d/ros-latest.list
 echo "deb http://repo.coex.space/rpi-ros-kinetic stretch main" > /etc/apt/sources.list.d/rpi-ros-kinetic.list
@@ -150,16 +150,6 @@ cd /home/pi/mavlink-router \
   --prefix=/usr \
 && make \
 && make install \
-|| (echo_stamp "Failed to build mavlink-router!" "ERROR"; exit 1)
-
-echo_stamp "Build cmavnode"
-cd /home/pi/cmavnode \
-&& git status \
-&& mkdir build \
-&& cd build \
-&& cmake .. \
-&& make \
-&& make install \
 || (echo_stamp "Failed to build cmavnode!" "ERROR"; exit 1)
 
 echo_stamp "Add .vimrc"
@@ -178,15 +168,8 @@ gpgconf --kill dirmngr
 # We ignore pkill's exit value as well.
 pkill -9 -f dirmngr || true
 
-echo_stamp "Change permissions"
-chown -Rf pi:pi /home/pi/mavlink \
-&& chown -Rf pi:pi /home/pi/pymavlink \
-&& chown -Rf pi:pi /home/pi/mavlink-router \
-&& chown -Rf pi:pi /home/pi/cmavnode \
-|| (echo_stamp "Failed to change permissions!" "ERROR"; exit 1)
-
 echo_stamp "Enable services"
-systemctl enable cmavnode@cs \
+systemctl enable mavlink-router \
 && systemctl enable pigpiod \
 || (echo_stamp "Failed to enable services!" "ERROR"; exit 1)
 
