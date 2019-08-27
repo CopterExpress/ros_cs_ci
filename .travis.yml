@@ -34,8 +34,8 @@ jobs:
     - mkdir -p ros_cs_ws/src
     - pushd ros_cs_ws/src
     - git clone https://${GITHUB_USER}:${GITHUB_OAUTH_TOKEN}@github.com/CopterExpress/ros_cs.git
-    - git remote set-url origin https://github.com/CopterExpress/ros_cs.git
     - pushd ros_cs
+    - git remote set-url origin https://github.com/CopterExpress/ros_cs.git
     - git submodule update --init --recursive
     - popd
     - popd
