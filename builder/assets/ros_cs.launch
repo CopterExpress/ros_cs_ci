@@ -8,8 +8,8 @@
     <param name="node_state_check_timeout" type="double" value="0.5" />
     <!-- Mavlink URL in the original MAVLink format -->
     <param name="mavlink_url" type="str" value="udpout:localhost:14588" />
-    <!-- Charging station heartbeat interval (s) -->
-    <param name="heartbeat_interval" type="double" value="1" />
+    <!-- Charging station telemetry rate (heartbeats, etc) (Hz) -->
+    <param name="telemetry_rate" type="double" value="1" />
     <!-- GPS driver ROS node prefix (keep empty string if no driver node presented) -->
     <param name="gps_node_prefix" type="str" value="cs_gps_ubx_rtcm" />
     <!-- RTCM driver ROS node prefix (keep empty string if no topic presented) -->
@@ -34,8 +34,8 @@
     <param name="rain_topic" type="str" value="/cs_meteo_pywws/rain" />
     <!-- External humidity ROS topic -->
     <param name="external_humidity_topic" type="str" value="/cs_meteo_pywws/humidity_out" />
-    <!-- Parameters that can be changed during the runtime are located into: -->
-    <!--    /config/<node_name>.json file -->
+    <!-- Volatile node parameters ('' to detect automatically) -->
+    <param name="configuration_file" value="$(find cs_mavlink)/config/cs_mavlink.json" />
   </node>
   <!-- Charging station driver ROS node (output on the screen) -->
   <node pkg="cs_driver_a1" type="cs_driver_a1_node.py" name="cs_driver_a1" output="screen" respawn="true" respawn_delay="3">
