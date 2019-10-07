@@ -137,6 +137,10 @@ fi
 
 export ROS_IP='127.0.0.1' # needed for running tests
 
+echo_stamp "Installing additional ROS packages"
+apt-get install -y --no-install-recommends \
+    ros-kinetic-ros-comm ros-kinetic-rostest ros-kinetic-ros-pytest
+
 echo_stamp "Installing COEX charging station" \
 && cd /home/pi/ros_cs_ws/src/ros_cs \
 && git status \
@@ -150,10 +154,6 @@ echo_stamp "Installing COEX charging station" \
 && systemctl enable roscore \
 && echo_stamp "All COEX charging station packages was installed!" "SUCCESS" \
 || (echo_stamp "COEX charging station installation was failed!" "ERROR"; exit 1)
-
-echo_stamp "Installing additional ROS packages"
-apt-get install -y --no-install-recommends \
-    ros-kinetic-ros-comm
 
 echo_stamp "Change permissions"
 chown -Rf pi:pi /home/pi/ros_cs_ws \
