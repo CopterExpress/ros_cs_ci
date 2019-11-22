@@ -110,6 +110,7 @@ automake \
 libtool \
 python3-future \
 python-monotonic \
+libyaml-dev \
 && echo_stamp "Everything was installed!" "SUCCESS" \
 || (echo_stamp "Some packages wasn't installed!" "ERROR"; exit 1)
 
@@ -151,7 +152,28 @@ cd /home/pi/mavlink-router \
   --prefix=/usr \
 && make \
 && make install \
-|| (echo_stamp "Failed to build cmavnode!" "ERROR"; exit 1)
+&& cd .. \
+&& rm -r mavlink-router \
+|| (echo_stamp "Failed to build mavlink-router!" "ERROR"; exit 1)
+
+echo_stamp "Build libcyaml"
+cd /home/pi/libcyaml \
+&& git status \
+&& make -j4 \
+&& make install \
+&& cd .. \
+&& rm -r libcyaml \
+|| (echo_stamp "Failed to build libcyaml!" "ERROR"; exit 1)
+
+echo_stamp "Build mavlink-fast-switch"
+cd /home/pi/mavlink-fast-switch \
+&& git status \
+&& mkdir build \
+&& cd build \
+&& cmake -DCMAKE_BUILD_TYPE=Release .. \
+&& make -j4 \
+&& make install \
+|| (echo_stamp "Failed to build mavlink-fast-switch!" "ERROR"; exit 1)
 
 echo_stamp "Add .vimrc"
 cat << EOF > /home/pi/.vimrc
@@ -170,7 +192,7 @@ gpgconf --kill dirmngr
 pkill -9 -f dirmngr || true
 
 echo_stamp "Enable services"
-systemctl enable mavlink-router \
+systemctl enable mavlink-fast-switch@cs \
 && systemctl enable pigpiod \
 || (echo_stamp "Failed to enable services!" "ERROR"; exit 1)
 

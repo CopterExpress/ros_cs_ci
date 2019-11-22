@@ -90,16 +90,18 @@ ${BUILDER_DIR}/image-chroot.sh ${IMAGE_PATH} copy ${LIB_DIR}'/mavlink' '/home/pi
 ${BUILDER_DIR}/image-chroot.sh ${IMAGE_PATH} copy ${LIB_DIR}'/pymavlink' '/home/pi/pymavlink'
 # Copy mavlink-router repository contents to the image
 ${BUILDER_DIR}/image-chroot.sh ${IMAGE_PATH} copy ${LIB_DIR}'/mavlink-router' '/home/pi/mavlink-router'
-# Copy cmavnode repository contents to the image
-${BUILDER_DIR}/image-chroot.sh ${IMAGE_PATH} copy ${LIB_DIR}'/cmavnode' '/home/pi/cmavnode'
+# Copy libcyaml repository contents to the image
+${BUILDER_DIR}/image-chroot.sh ${IMAGE_PATH} copy ${LIB_DIR}'/libcyaml' '/home/pi/libcyaml'
+# Copy MAVLink fast switch repository contents to the image
+${BUILDER_DIR}/image-chroot.sh ${IMAGE_PATH} copy ${LIB_DIR}'/mavlink-fast-switch' '/home/pi/mavlink-fast-switch'
 # Copy service files
 ${BUILDER_DIR}/image-chroot.sh ${IMAGE_PATH} copy ${SCRIPTS_DIR}'/assets/remote_serial_rtk.env' '/lib/systemd/system/'
 ${BUILDER_DIR}/image-chroot.sh ${IMAGE_PATH} copy ${SCRIPTS_DIR}'/assets/remote_serial_rtk.service' '/lib/systemd/system/'
 ${BUILDER_DIR}/image-chroot.sh ${IMAGE_PATH} copy ${SCRIPTS_DIR}'/assets/cmavnode@.service' '/lib/systemd/system/'
 # Copy configuration files
 ${BUILDER_DIR}/image-chroot.sh ${IMAGE_PATH} copy ${SCRIPTS_DIR}'/assets/main.conf' '/etc/mavlink-router/'
-${BUILDER_DIR}/image-chroot.sh ${IMAGE_PATH} copy ${SCRIPTS_DIR}'/assets/cs.conf' '/etc/cmavnode/'
 ${BUILDER_DIR}/image-chroot.sh ${IMAGE_PATH} copy ${SCRIPTS_DIR}'/assets/ros_cs.launch' '/home/pi/'
+${BUILDER_DIR}/image-chroot.sh ${IMAGE_PATH} copy ${SCRIPTS_DIR}'/assets/cs.yaml' '/etc/mavlink-fast-switch/'
 # software install
 ${BUILDER_DIR}/image-chroot.sh ${IMAGE_PATH} exec ${SCRIPTS_DIR}'/image-software.sh'
 # network setup

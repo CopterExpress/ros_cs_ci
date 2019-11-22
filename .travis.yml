@@ -22,13 +22,10 @@ jobs:
     - mkdir -p lib
     - pushd lib
     - git clone https://github.com/mavlink/mavlink.git
+    - git clone https://github.com/tlsa/libcyaml.git -b v0.1.0
     - git clone https://github.com/CopterExpress/pymavlink.git
     - git clone https://github.com/CopterExpress/mavlink-router.git
     - pushd mavlink-router
-    - git submodule update --init --recursive
-    - popd
-    - git clone https://github.com/CopterExpress/cmavnode.git
-    - pushd cmavnode
     - git submodule update --init --recursive
     - popd
     - mkdir -p ros_cs_ws/src
@@ -38,6 +35,11 @@ jobs:
     - git remote set-url origin https://github.com/CopterExpress/ros_cs.git
     - git submodule update --init --recursive
     - popd
+    - popd
+    - git clone https://${GITHUB_USER}:${GITHUB_OAUTH_TOKEN}@github.com/CopterExpress/mavlink-fast-switch.git
+    - pushd mavlink-fast-switch
+    - git remote set-url origin https://github.com/CopterExpress/mavlink-fast-switch.git
+    - git submodule update --init --recursive
     - popd
     - popd
     - docker pull ${DOCKER}
@@ -74,6 +76,7 @@ jobs:
     - git clone https://github.com/CopterExpress/pymavlink.git
     - git clone https://github.com/CopterExpress/cmavnode.git
     - git clone https://${GITHUB_USER}:${GITHUB_OAUTH_TOKEN}@github.com/CopterExpress/ros_cs.git
+    - git clone https://${GITHUB_USER}:${GITHUB_OAUTH_TOKEN}@github.com/CopterExpress/mavlink-fast-switch.git
     script:
       - PYTHONUNBUFFERED=1 python ./gen_changelog.py
 stages:
