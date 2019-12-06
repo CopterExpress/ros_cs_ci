@@ -569,3 +569,11 @@ python-libusb1:
     stretch:
       pip:
         packages: [libusb1]
+pytest-dependency:
+  debian:
+    stretch:
+      pip:
+        packages: [pytest-dependency]
+pytest:
+  debian:
+    stretch: [python-pytest]
