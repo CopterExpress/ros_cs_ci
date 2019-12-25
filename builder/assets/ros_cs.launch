@@ -12,8 +12,8 @@
     <param name="telemetry_rate" type="double" value="1" />
     <!-- GPS driver ROS node prefix (keep empty string if no driver node presented) -->
     <param name="gps_node_prefix" type="str" value="cs_gps_ubx_rtcm" />
-    <!-- RTCM driver ROS node prefix (keep empty string if no topic presented) -->
-    <param name="rtcm_node_prefix" type="str" value="cs_gps_ubx_rtcm" />
+    <!-- RTK driver ROS node prefix (keep empty string if no driver node presented) -->
+    <param name="rtk_node_prefix" type="str" value="cs_gps_ubx_rtcm" />
     <!-- Compass heading topic (keep empty string if no compass data presented) -->
     <param name="compass_heading_topic" type="str" value="" />
     <!-- Charging station driver ROS node -->
