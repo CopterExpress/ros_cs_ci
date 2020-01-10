@@ -116,7 +116,7 @@
     <!-- Inversed signal on the charger GPIO pin -->
     <param name="inversed_signal" type="bool" value="true" />
     <!-- Charging station driver prefix -->
-    <param name="driver_node_prefix" type="str" value="cs_driver_a1" />
+    <param name="driver_node_prefix" type="str" value="/cs_driver_a1" />
     <!-- Actuator active states (comma separated, as example: "OPEN,CLOSED") -->
     <param name="active_states" type="str" value="OPEN" />
   </node>
