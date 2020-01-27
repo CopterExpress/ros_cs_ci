@@ -11,7 +11,7 @@
 
 set -e # Exit immidiately on non-zero result
 
-SOURCE_IMAGE="http://director.downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2019-04-09/2019-04-08-raspbian-stretch-lite.zip"
+SOURCE_IMAGE="https://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2019-09-30/2019-09-26-raspbian-buster-lite.zip"
 
 export DEBIAN_FRONTEND=${DEBIAN_FRONTEND:='noninteractive'}
 export LANG=${LANG:='C.UTF-8'}
@@ -76,6 +76,9 @@ get_image ${IMAGE_PATH} ${SOURCE_IMAGE}
 # Make free space
 ${BUILDER_DIR}/image-resize.sh ${IMAGE_PATH} max '7G'
 
+# Temporary disable ld.so
+${BUILDER_DIR}/image-chroot.sh ${IMAGE_PATH} exec ${SCRIPTS_DIR}'/image-ld.sh' disable
+
 # Copy cloned repository to the image
 # Include dotfiles in globs (asterisks)
 shopt -s dotglob
@@ -121,5 +124,8 @@ ${BUILDER_DIR}/image-chroot.sh ${IMAGE_PATH} copy ${SCRIPTS_DIR}'/assets/cs_rena
 ${BUILDER_DIR}/image-chroot.sh ${IMAGE_PATH} copy ${LIB_DIR}'/ros_cs_ws' '/home/pi/ros_cs_ws'
 ${BUILDER_DIR}/image-chroot.sh ${IMAGE_PATH} exec ${SCRIPTS_DIR}'/image-ros.sh' ${REPO_URL} ${IMAGE_VERSION} false false ${NUMBER_THREADS}
 ${BUILDER_DIR}/image-chroot.sh ${IMAGE_PATH} exec ${SCRIPTS_DIR}'/image-validate.sh'
+
+# Enable ld.so.preload
+${BUILDER_DIR}/image-chroot.sh ${IMAGE_PATH} exec ${SCRIPTS_DIR}'/image-ld.sh' enable
 
 ${BUILDER_DIR}/image-resize.sh ${IMAGE_PATH}
