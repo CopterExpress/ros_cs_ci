@@ -58,7 +58,7 @@ echo_stamp "Install apt keys & repos"
 # TODO: This STDOUT consist 'OK'
 curl http://deb.coex.tech/aptly_repo_signing.key 2> /dev/null | apt-key add -
 apt-get update \
-&& apt-get install --no-install-recommends -y -qq dirmngr=2.1.18-8~deb9u4 > /dev/null \
+&& apt-get install --no-install-recommends -y -qq dirmngr > /dev/null \
 && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
 
 echo "deb http://packages.ros.org/ros/ubuntu stretch main" > /etc/apt/sources.list.d/ros-latest.list
@@ -73,22 +73,22 @@ apt-get update -qq
 
 echo_stamp "Software installing"
 apt-get install --no-install-recommends -y \
-unzip=6.0-21 \
-zip=3.0-11 \
-screen=4.5.0-6 \
-byobu=5.112-1  \
-lsof=4.89+dfsg-0.1 \
+unzip \
+zip \
+screen \
+byobu  \
+lsof \
 git \
-dnsmasq=2.76-5+rpt1+deb9u1  \
-tmux=2.3-4 \
+dnsmasq  \
+tmux \
 vim \
-cmake=3.7.2-1 \
+cmake \
 ltrace \
 python-rosdep \
 python-rosinstall-generator \
-python-wstool=0.1.17-1 \
-python-rosinstall=0.7.8-1 \
-build-essential=12.3 \
+python-wstool \
+python-rosinstall \
+build-essential \
 pigpio python-pigpio \
 i2c-tools \
 ntpdate \
@@ -114,8 +114,8 @@ libyaml-dev \
 && echo_stamp "Everything was installed!" "SUCCESS" \
 || (echo_stamp "Some packages wasn't installed!" "ERROR"; exit 1)
 
-echo_stamp "Updating kernel to fix camera bug"
-apt-get install --no-install-recommends -y raspberrypi-kernel=1.20190401-1
+echo_stamp "Updating kernel"
+apt-get install --no-install-recommends -y raspberrypi-kernel
 
 # Deny byobu to check available updates
 sed -i "s/updates_available//" /usr/share/byobu/status/status
