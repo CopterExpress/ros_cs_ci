@@ -61,9 +61,8 @@ apt-get update \
 && apt-get install --no-install-recommends -y -qq dirmngr > /dev/null \
 && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
 
-echo "deb http://packages.ros.org/ros/ubuntu stretch main" > /etc/apt/sources.list.d/ros-latest.list
-echo "deb http://deb.coex.tech/rpi-ros-kinetic stretch main" > /etc/apt/sources.list.d/rpi-ros-kinetic.list
-echo "deb http://deb.coex.tech/clever stretch main" > /etc/apt/sources.list.d/clever.list
+echo "deb http://packages.ros.org/ros/ubuntu buster main" > /etc/apt/sources.list.d/ros-latest.list
+echo "deb http://deb.coex.tech/rpi-ros-melodic buster main" > /etc/apt/sources.list.d/rpi-ros-melodic.list
 
 echo_stamp "Update apt cache"
 
