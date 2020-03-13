@@ -110,6 +110,10 @@ libtool \
 python3-future \
 python-monotonic \
 libyaml-dev \
+ros-melodic-rostopic \
+ros-melodic-rosservice \
+ros-melodic-rosnode \
+ros-melodic-rosbash \
 && echo_stamp "Everything was installed!" "SUCCESS" \
 || (echo_stamp "Some packages wasn't installed!" "ERROR"; exit 1)
 
