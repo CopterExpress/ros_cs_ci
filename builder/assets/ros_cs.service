@@ -6,7 +6,7 @@ StartLimitBurst=0
 
 [Service]
 EnvironmentFile=/lib/systemd/system/roscore.env
-ExecStart=/opt/ros/kinetic/bin/roslaunch /home/pi/ros_cs.launch --wait --screen
+ExecStart=/opt/ros/melodic/bin/roslaunch /home/pi/ros_cs.launch --wait --screen
 Restart=on-failure
 RestartSec=3s
 
